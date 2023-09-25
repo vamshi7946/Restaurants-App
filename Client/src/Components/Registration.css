@@ -1,0 +1,202 @@
+/* RegistrationForm.css */
+
+.registration-form {
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .registration-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgb(249, 246, 248);
+  }
+  .registration-board{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color:  rgb(129, 49, 99);
+    height: 50vh;
+    width:50vw;
+  }
+  .navbar {
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 0; /* Stick the navbar to the top of the viewport */
+    background-color: #333; /* Change the background color as needed */
+    padding: 10px 0;
+    z-index: 100; /* Ensure the navbar is above other content */
+  }
+  .input-field {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 16px;
+  }
+  
+  .submit-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  .image{
+    height:40vh;
+    width:40vw;
+  }
+  .carsoul-container{
+    margin-top: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height:40vh;
+    width:100vw;
+  }
+  .carousel-custom{
+    height:40vh;
+    width:40vw;
+  }
+  .main{
+    background-color: #333;
+  }
+  .nav-text{
+    color: white;
+  }
+  .main-container{
+    text-align: center;
+    color:white;
+    background-color:#333;
+  }
+  .main-heading{
+    font-size: 40px;
+  }
+  .content-para{
+    font-size: 30px;
+  }
+  .about{
+    background-color:hsl(280, 3%, 19%);
+    height: 500vh;
+  }
+  .about-container{
+    padding-top: 30px;
+    margin-left: 30px;
+    margin-right: 30px;
+    color:white;
+  }
+  .bg-image-container{
+    background-image: url("https://images.template.net/wp-content/uploads/2016/08/17070259/Food-Websites-Image.jpg");
+  
+  }
+  .about-image{
+    height:70vh;
+    width:30vw;
+  }
+  .content1{
+    margin-top: 80px;
+    margin-left: 150px;
+  }
+  .content{
+    margin-left: 50px;
+    margin-right: 100px;
+  }
+  .heading{
+    font-family:  serif ,Chancery, cursive;
+    font-style: italic;
+    font-size: 40px;
+    color:#b60410;
+
+  }
+  .para{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 25px;
+  }
+  .heading1{
+    font-family: georgia,serif;
+    font-size: 40px;
+    color:#b60410;
+  }
+  .para1{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    color:black;
+    font-size: 25px;
+  }
+  .spanned{
+    color:#b60410;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+  }
+  .heading-2{
+    font-size: 45px;
+  }
+  .login-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgb(249, 246, 248);
+  }
+  .login-board{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color:  rgb(129, 49, 99);
+    height: 50vh;
+    width:50vw;
+    }
+    .about-images-row1{
+      height:48vh;
+      width:20vw;
+      padding-right: 15px;
+    }
+    .images-container{
+      margin-top:60px ;
+      margin-left:150px ;
+      margin-right: 0px;
+    }
+    .about-images-row2{
+      height:40vh;
+      width:26vw;
+      padding-right: 15px;
+    }
+    .about-carsoul-container{
+      height:20vh;
+    }
+    .home-images{
+      height:38vh;
+      width:28vw;
+    }
+  .card-div{
+      height:50vh;
+      width:28vw;
+      margin: 10px;
+    }
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin:60px;
+}
+.navbar-image{
+  height:50px;
+  width:50px;
+}
+
