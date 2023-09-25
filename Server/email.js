@@ -27,7 +27,7 @@ const transporter = nodemailer.createTransport({
     
     Best regards,
     
-    Batch-1
+    Batch-2
     Internship Project
     ECOMM Nodejs Project
     `,
