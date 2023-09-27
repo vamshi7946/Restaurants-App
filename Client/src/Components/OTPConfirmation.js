@@ -42,20 +42,23 @@ function OTPConfirmation() {
   };
 
   return (
-    <div>
+    <div className='registration-container'>
+      <div className='registration-board'>
+      <form className="registration-form"  onSubmit={handleSubmit}>
       <h2>OTP Confirmation</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
+          <div>
           <label>Enter OTP:</label>
           <input
+          className='input-field'
             type="text"
             value={otp}
             onChange={(e) => setOTP(e.target.value)}
             required
           />
         </div>
-        <button type="submit">Verify OTP</button>
+        <button className="submit-button" type="submit">Verify OTP</button>
       </form>
+      </div>
     </div>
   );
 }

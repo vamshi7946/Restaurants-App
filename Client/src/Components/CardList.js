@@ -20,7 +20,7 @@ function RestaurantCard() {
                 <div className="card-body">
                   <h5 className="card-title">{restaurant.Name}</h5>
                   <p className="card-text">{restaurant.Location}</p>
-                  <a href={`/api/restaurants/${restaurant.RestaurantID}`} className="btn btn-primary">Go somewhere</a>
+                  <a href={`/api/restaurants/${restaurant.RestaurantID}/details`} className="btn btn-primary">Go somewhere</a>
                 </div>
           </div>
         ))}

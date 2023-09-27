@@ -1,41 +1,23 @@
 import React from 'react'
-//import { useState,useEffect } from 'react';
-//import { useNavigate } from 'react-router-dom'; // Import useHistory from React Router
+import { useState,useEffect} from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useHistory from React Router
 import './Registration.css';
 import { useAuth } from './AuthContext'; // Import the useAuth hook
 
   function Navbar() {
-  //const navigate=useNavigate();
+  const navigate=useNavigate();
   const { isLoggedIn, setIsLoggedIn, username } = useAuth(); // Use the useAuth hook to access user authentication state
-  const handleLogin = async (e) => {
-    try {
-      const response = await fetch('/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        //body: JSON.stringify({ isLoggedIn }),
-      });
-      if (response.status === 200) {
-        const data = await response.json();
-        console.log(data)
-        //setIsLoggedIn(data.isLoggedIn)
-        //alert(data.message);
-        // Redirect or perform actions for successful login
-      } else {
-        const data = await response.json();
-        alert(data.message);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  };
+  const [search,setSearch]=useState('');
 
   const handleLogout =  (e) => {
     e.preventDefault();
     setIsLoggedIn(false);
   };
-  console.log(isLoggedIn)
+
+  const handleSearch= async (e)=>{
+    e.preventDefault();
+    navigate(`/api/restaurants/search?keyword=${search}`);
+  };
 
 
   return (
@@ -81,8 +63,14 @@ import { useAuth } from './AuthContext'; // Import the useAuth hook
         </li>
       </ul>
       <form className="d-flex" role="search">
-        <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-        <button className="btn btn-outline-success" type="submit">Search</button>
+        <input className="form-control me-2"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        />
+        <button className="btn btn-outline-success" onClick={handleSearch} type="submit">Search</button>
       </form>
     </div>
   </div>

@@ -15,7 +15,7 @@ function IndividualRestaurantPage() {
     async function fetchRestaurantData() {
       try {
         // Replace this with your actual API fetch code to retrieve restaurant data
-        const response = await fetch(`/api/restaurants/${id}`); // Assuming your API endpoint
+        const response = await fetch(`/api/restaurants/${id}/details`); // Assuming your API endpoint
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }

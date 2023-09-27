@@ -17,7 +17,7 @@ const pool = mysql.createPool({
     password: '1234',
     database: 'restaurant',
     waitForConnections: true,
-    connectionLimit: 20,
+    connectionLimit: 50,
     queueLimit: 0,
 });
 let verificationCode;
@@ -28,6 +28,44 @@ function generateVerificationCode() {
   const max = 999999;
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+app.get('/api', async (req, res) => {
+  try {
+    // Use async/await with the promise-based client
+    const [rows] = await pool.query('SELECT * FROM restaurants');
+    //console.log(rows)
+    res.json(rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+app.get('/api/restaurants/search', async (req, res) => {
+  // Retrieve query parameters for searching
+  console.log(req.query)
+  const { keyword } = req.body;
+  console.log(req.query.keyword)
+  try {
+    // Construct a SQL query based on the search criteria
+    const sql = `
+      SELECT * 
+      FROM Restaurants 
+      WHERE Name LIKE ? OR Cuisine LIKE ? OR Location LIKE ?
+    `;
+    const queryKeyword = `%${req.query.keyword}%`;
+    // Execute the query
+    const [results] = await pool.query(sql, [queryKeyword, queryKeyword, queryKeyword]);
+
+    if (results.length === 0) {
+      res.status(404).json({ error: 'No restaurants found matching the criteria' });
+    } else {
+      res.status(200).json(results);
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while searching for restaurants' });
+  }
+});
 
 
 // 1.Endpoint for retrieving all restaurants or filtered and sorted restaurants
@@ -171,166 +209,8 @@ app.get('/api/restaurants/:restaurant_id/reviews', async (req, res) => {
     }
 });
 
-
-app.get('/api/restaurants/1/html-page', (req, res) => {
-    // Set the Content-Type header to indicate that you're sending HTML.
-    res.setHeader('Content-Type', 'text/html');
-  
-    // Define your HTML content.
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title> Restaurant A</title>
-        </head>
-        <body>
-          <h1>Restaurant A</h1>
-          <p>Welcome to our restaurant</p>
-          <img src="https://assets.traveltriangle.com/blog/wp-content/uploads/2017/10/Flechazo.jpg"/>
-          <img src="https://imgmedia.lbb.in/media/2022/12/6399ab61e46d7d6c99f89400_1671015265356.jpg"/>
-          <img src="https://i0.wp.com/stanzaliving.wpcomstaging.com/wp-content/uploads/2022/04/a566a-restaurants-in-hyderabad.jpg?fit=1000%2C750&ssl=1"/>
-        </body>
-      </html>
-    `;
-  
-    // Send the HTML content as the response.
-    res.send(htmlContent);
-  });
-
-
-  app.get('/api/restaurants/2/html-page', (req, res) => {
-    // Set the Content-Type header to indicate that you're sending HTML.
-    res.setHeader('Content-Type', 'text/html');
-  
-    // Define your HTML content.
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title> Restaurant B</title>
-          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        </head>
-        <body>
-          <h1 class='text-center'>Restaurant B</h1>
-          <p class='text-center'>Welcome to our restaurant</p>
-          <div class='d-flex flex-row justify-content-center mb-4'>
-          <img  class='mx-2' src="https://www.dineout.co.in/blog/wp-content/uploads/2017/03/Olive-Bistro-700x400.jpg"/>
-          <img  src="https://www.shoutlo.com/uploads/articles/header-img-are-you-in-love-with-rooftop-restaurant-azure-check-out-hyderabads-famous-rooftop-restaurants.jpg"/>
-          </div>
-          <div class='d-flex flex-row justify-content-center'>
-          <img  class='mx-2'src="https://assets.traveltriangle.com/blog/wp-content/uploads/2017/10/Exotica.jpg"/>
-          <img  src="https://images.venuebookingz.com/26740-1636624111-wm-bel-post-cafe-jubilee-hills-hyderabad-1.jpg"/>
-          </div>
-          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-        </body>
-      </html>
-    `;
-  
-    // Send the HTML content as the response.
-    res.send(htmlContent);
-  });
-
-  app.get('/api/restaurants/3/html-page', (req, res) => {
-    // Set the Content-Type header to indicate that you're sending HTML.
-    res.setHeader('Content-Type', 'text/html');
-  
-    // Define your HTML content.
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title> Restaurant C</title>
-          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        </head>
-        <body>
-          <h1 class='text-center'>Restaurant C</h1>
-          <p class='text-center'>Welcome to our restaurant</p>
-          <div class='pl-4'>
-          <div class='d-flex flex-row justify-content-center mb-4'>
-          <img  class='mx-3'src="https://www.ramojifilmcity.com/images/images/things-todo-restaurants-gal1.jpg"/>
-          <img  src="https://www.ramojifilmcity.com/images/images/restuarants-things-todo.jpg"/>
-          </div>
-          <div class='d-flex flex-row justify-content-center'>
-          <img  class='mx-2'src="https://www.ramojifilmcity.com/images/images/things-todo-restaurants-gal4.jpg"/>
-          <img  src="https://ak-d.tripcdn.com/images/02272120009sy3sy3E48E_R_800_525.jpg"/>
-          </div>
-          </div>
-          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-        </body>
-      </html>
-    `;
-  
-    // Send the HTML content as the response.
-    res.send(htmlContent);
-  });
-
-  app.get('/api/restaurants/4/html-page', (req, res) => {
-    // Set the Content-Type header to indicate that you're sending HTML.
-    res.setHeader('Content-Type', 'text/html');
-  
-    // Define your HTML content.
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title> Restaurant D</title>
-          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        </head>
-        <body>
-          <h1 class='text-center'>Restaurant D</h1>
-          <p class='text-center'>Welcome to our restaurant</p>
-          <div
-          <div class='d-flex flex-row justify-content-center'>
-          <img  class='mx-2'src="https://imgmedia.lbb.in/media/2023/08/64d37c36a8a4940ea79350ec_1691581494379.jpg"/>
-          <img  src="https://b.zmtcdn.com/data/pictures/9/90299/5bbf57c2bbcc0b28e0ae2cb14af04c70.jpg?fit=around|750:500&crop=750:500;*,*"/>
-          </div>
-          <div class='d-flex flex-row justify-content-center mb-4'>
-          <img  class='mx-2' src="https://b.zmtcdn.com/data/pictures/6/96626/.jpg"/>
-          <img  src="https://www.ramojifilmcity.com/images/images/restuarants-things-todo.jpg"/>
-          </div>
-          </div>
-          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-        </body>
-      </html>
-    `;
-  
-    // Send the HTML content as the response.
-    res.send(htmlContent);
-  });
 //6.Endpoint for searching restaurants
-app.get('/api/restaurants/search', async (req, res) => {
-    // Retrieve query parameters for searching
-    const { keywords, cuisine, location } = req.query;
-  
-    try {
-        // Construct a SQL query based on the search criteria
-        let sql = 'SELECT * FROM Restaurants WHERE 1';
-  
-        if (keywords) {
-            sql += ` AND (Name LIKE '%${keywords}%' or cuisine like '%${keywords}%')`;
-        }
-  
-        if (cuisine) {
-            sql += ` AND Cuisine = '${cuisine}'`;
-        }
-  
-        if (location) {
-            sql += ` AND Location = '${location}'`;
-        }
-  
-        // Execute the query
-        const [results] = await pool.query(sql);
-  
-        if (results.length === 0) {
-            res.status(404).json({ error: 'No restaurants found matching the criteria' });
-        } else {
-            res.json(results);
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'An error occurred while searching for restaurants' });
-    }
-  });
+
 
 //7. Define the sorting endpoint
 app.get('/api/restaurants/sort', async (req, res) => {
@@ -371,15 +251,20 @@ app.get('/api/restaurants/:restaurant_id', async (req, res) => {
 
         // Build the SQL query to fetch the restaurant by ID with a parameterized query
         const sql = 'SELECT * FROM restaurants WHERE restaurantID = ?';
+        const reviewsSql = 'SELECT * FROM reviews WHERE restaurantID = ?';
+        const [reviewsRows] = await pool.query(reviewsSql, [restaurantId]);
 
         // Execute the SQL query with the parameter
         const [rows] = await pool.query(sql, [restaurantId]);
-
+        const restaurantData = {
+          restaurant: rows[0],
+          reviews: reviewsRows,
+      };
         if (rows.length === 0) {
             return res.status(404).json({ error: 'Restaurant not found' });
         }
-
-        res.json(rows[0]); // Assuming there's only one restaurant with the given ID
+        console.log(restaurantData)
+        res.json(restaurantData); // Assuming there's only one restaurant with the given ID
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Database error' });
@@ -391,12 +276,21 @@ app.get('/api/restaurants/:restaurant_id/details', async (req, res) => {
     const restaurantId = req.params.restaurant_id;
 
     try {
-        const [results] = await pool.query('SELECT name,location,phone,rating,openhours FROM Restaurants WHERE RestaurantID = ?', [restaurantId]);
-
+        const [results] = await pool.query('SELECT RestaurantID,name,location,phone,rating,openhours,images FROM Restaurants WHERE RestaurantID = ?', [restaurantId]);
+        const reviewsSql = 'SELECT * FROM reviews WHERE restaurantID = ?';
+        const menuSql = 'select * from menuitems where restaurantID = ?';
+        const [reviewsRows] = await pool.query(reviewsSql, [restaurantId]);
+        const [menuRows] = await pool.query(menuSql, [restaurantId]);
+        const restaurantData = {
+          restaurant: results[0],
+          reviews: reviewsRows,
+          menuItems:menuRows
+      };
+      console.log(restaurantData)
         if (results.length === 0) {
             res.status(404).json({ error: 'Restaurant not found' });
         } else {
-            res.json(results[0]);
+            res.json(restaurantData);
         }
     } catch (error) {
         console.error(error);
@@ -427,29 +321,6 @@ app.get('/api/restaurants/:restaurant_id/images', async (req, res) => {
         res.status(500).json({ error: 'An error occurred while fetching restaurant images' });
     }
 });
-
-
-// app.post('/api/register', async (req, res) => {
-//   const { username,email, password } = req.body;
-  
-//   try {
-//     // Generate a salt and hash the user's password
-//     const saltRounds = 10; // Number of salt rounds (adjust as needed)
-//     const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-//     const connection = await pool.getConnection();
-//     const [rows] = await connection.query('INSERT INTO users (username,email, password) VALUES (?, ?, ?)', [username,email, hashedPassword]);
-//     connection.release();
-//     sendWelcomeEmail(email,username);
-//     res.status(201).json({ message: 'User registered successfully' });
-//   } catch (error) {
-//     console.error('Error inserting data:', error);
-//     res.status(500).json({ error: 'Error inserting data' });
-//   }
-// });
-
-
-// Send an OTP email
 
 app.post('/api/register', async (req, res) => {
   try {
@@ -502,17 +373,6 @@ app.post('/api/otp-confirmation', async (req, res) => {
 });
 
 // Route to fetch and display cards from the database
-app.get('/api', async (req, res) => {
-  try {
-    // Use async/await with the promise-based client
-    const [rows] = await pool.query('SELECT * FROM restaurants');
-    //console.log(rows)
-    res.json(rows);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
 
 
 // User login endpoint
