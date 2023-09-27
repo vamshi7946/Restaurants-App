@@ -1,17 +1,25 @@
 // ReviewForm.js
 import React, { useState } from 'react';
 import './Registration.css';
-function ReviewForm({ onSubmit }) {
+import { useParams } from 'react-router-dom';
+function ReviewForm(props) {
   const [name, setName] = useState('');
   const [rating, setRating] = useState('');
   const [comment, setComment] = useState('');
-
+  const username=props.username;
+  const { restaurant_id } = useParams();
+    console.log(restaurant_id);
   const handleReviewSubmit = async(e) => {
     e.preventDefault();
-    const reviewData = { name, rating, comment };
+    console.log(props.username)
+    if(!props.username){
+      console.log('Login to add review');
+    }
+    else{
+    const reviewData = {username, rating, comment};
     try {
       // Send a POST request to your server to save the review
-      const response = await fetch(`/api/restaurants/reviews`, {
+      const response = await fetch(`/api/restaurants/${restaurant_id}/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -30,17 +38,8 @@ function ReviewForm({ onSubmit }) {
       // Handle network errors
       console.error('Network error:', error);
     }
-
-    // Validate inputs here if needed
-
-    // Call the onSubmit function with the review data
-    onSubmit({ name, rating, comment });
-
-    // Clear the form inputs
-    setName('');
-    setRating('');
-    setComment('');
-  };
+  }
+};
 
   return (
     <div className='registration-container'>
@@ -58,7 +57,7 @@ function ReviewForm({ onSubmit }) {
         <label>Comment:</label>
         <textarea value={comment} className="input-field" onChange={(e) => setComment(e.target.value)} required />
       </div>
-      <button type="submit">Submit Review</button>
+      <button className="submit-button" type="submit">Submit Review</button>
     </form>
     </div>
     </div>

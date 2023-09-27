@@ -1,9 +1,8 @@
 // RestaurantDetail.js
 import React from 'react';
 import './IndividualRestaurant.css'
-import ReviewForm from './ReviewForm';
+import { Link } from 'react-router-dom';
 function RestaurantDetail({ restaurant }) {
-  console.log(restaurant)
   return (
       <div className="Individual-details">
         <div>
@@ -30,7 +29,8 @@ function RestaurantDetail({ restaurant }) {
               ))}
             </ul>
           </div>
-          <div className='review-section'>
+          <div className='review-container' >
+            <div className='review-section'>
             <p>Reviews</p>
             <ul>
             {restaurant.reviews.map((review) => (
@@ -39,11 +39,11 @@ function RestaurantDetail({ restaurant }) {
             </li>
             ))}
             </ul>
-          </div>
-          <div className="add-review-section">
-        <h4>Add a Review</h4>
-        <a href={`/api/restaurants/${restaurant.restaurant.RestaurantID}/reviews`}>Add Review</a>
+            </div>
+            <div className="add-review-section">
+        <Link className="submit-button" to={`/api/restaurants/${restaurant.restaurant.RestaurantID}/reviews`}>Add Review</Link>
       </div>
+          </div>
         </div>
     </div>
   );

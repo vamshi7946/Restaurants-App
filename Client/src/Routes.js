@@ -6,7 +6,7 @@ import Login from './Components/Login';
 import About from './Components/About';
 import ResetPasswordForm from './Components/ResetForm';
 import Navbar from './Components/Navbar';
-//import { useState } from 'react';
+import { useState } from 'react';
 import IndividualRestaurantPage from './Components/IndividualRestaurantPage';
 import OTPConfirmation from './Components/OTPConfirmation';
 import { AuthProvider } from './Components/AuthContext';
@@ -16,26 +16,36 @@ import ReviewForm from './Components/ReviewForm';
 
 
 export default function Routers() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [username,setUsername]=useState(null);
+  const [superUser,setSuperUser]=useState(false)
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUsername(null);
+  };
   //const { isLoggedIn, username,setUsername, setIsLoggedIn } = useAuth();
 
   //const [isLoggedIn,setIsLoggedIn]=useState(false)
 
-  //const [username,setUsername]=useState('');
 
   return (
     <div>
     <Router>
-    <Navbar/>
+    <Navbar  superUser={superUser} setSuperUser={setSuperUser} isAuthenticated={isAuthenticated} username={username} setUsername={setUsername} onLogout={handleLogout}/>
       <Routes>
         <Route path="/api" element={<Home/>}/>
         <Route path='/api/about' element={<About/>}/>
         <Route path="/api/register" element={<RegistrationForm/>}/>
         <Route path="/api/reset-password" element={<ResetPasswordForm/>}/>
         <Route path="/api/otp-confirmation" element={<OTPConfirmation/>}/>
-        <Route path="/api/restaurants/:id/reviews" element={<ReviewForm/>}/>
+        <Route path="/api/restaurants/:restaurant_id/reviews" element={<ReviewForm username={username}/>}/>
         <Route path="/api/restaurants/search" element={<SearchRestaurantList/>}/>
         <Route path="/api/restaurants/:id/details" element={<IndividualRestaurantPage/>} />
-        <Route path="/api/login" element={<Login />}/>
+        <Route path="/api/login" element={<Login setSuperUser={setSuperUser} setUsername={setUsername} onLogin={handleLogin}/>}/>
       </Routes>
     </Router>
     </div>

@@ -1,6 +1,7 @@
 const express = require('express');
 const mysql = require('mysql2/promise');
 const bodyParser = require('body-parser');
+const {pool} = require('./db')
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 const cors = require('cors');
@@ -8,18 +9,10 @@ const { sendWelcomeEmail } = require('./email');
 const { sendVerificationEmail } = require('./verification');
 const app = express();
 const port = process.env.PORT || 5000;
-app.use(cors());
-app.use(bodyParser.json());
+router.use(cors());
+router.use(bodyParser.json());
 // Create a MySQL connection pool
-const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'vamshi',
-    password: '1234',
-    database: 'restaurant',
-    waitForConnections: true,
-    connectionLimit: 50,
-    queueLimit: 0,
-});
+
 let verificationCode;
 
 function generateVerificationCode() {
@@ -29,7 +22,7 @@ function generateVerificationCode() {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-app.get('/api', async (req, res) => {
+router.get('/api', async (req, res) => {
   try {
     // Use async/await with the promise-based client
     const [rows] = await pool.query('SELECT * FROM restaurants');
@@ -40,8 +33,11 @@ app.get('/api', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-app.get('/api/restaurants/search', async (req, res) => {
+router.get('/api/restaurants/search', async (req, res) => {
   // Retrieve query parameters for searching
+  console.log(req.query)
+  const { keyword } = req.body;
+  console.log(req.query.keyword)
   try {
     // Construct a SQL query based on the search criteria
     const sql = `
@@ -66,7 +62,7 @@ app.get('/api/restaurants/search', async (req, res) => {
 
 
 // 1.Endpoint for retrieving all restaurants or filtered and sorted restaurants
-app.get('/api/restaurants', async (req, res) => {
+router.get('/api/restaurants', async (req, res) => {
     const query = req.query;
     const filters = [];
     const sortingOptions = [];
@@ -127,7 +123,7 @@ app.get('/api/restaurants', async (req, res) => {
 });
 
 //3. Define the filtering endpoint
-app.get('/api/restaurants/filter', async (req, res) => {
+router.get('/api/restaurants/filter', async (req, res) => {
     try {
       const { cuisine, deliveryoptions } = req.query;
   
@@ -155,7 +151,7 @@ app.get('/api/restaurants/filter', async (req, res) => {
   });
 
 //4.Endpoint for retrieving the menu of a specific restaurant
-app.get('/api/restaurants/:restaurant_id/menu', async (req, res) => {
+router.get('/api/restaurants/:restaurant_id/menu', async (req, res) => {
     const restaurantId = req.params.restaurant_id;
 
     try {
@@ -189,7 +185,7 @@ app.get('/api/restaurants/:restaurant_id/menu', async (req, res) => {
 });
 
 //5.Endpoint for retrieving restaurant reviews by restaurant ID
-app.get('/api/restaurants/:restaurant_id/reviews', async (req, res) => {
+router.get('/api/restaurants/:restaurant_id/reviews', async (req, res) => {
     const restaurantId = req.params.restaurant_id;
 
     try {
@@ -206,28 +202,8 @@ app.get('/api/restaurants/:restaurant_id/reviews', async (req, res) => {
     }
 });
 
-// Endpoint for adding a review to a restaurant by ID
-app.post('/api/restaurants/:restaurant_id/reviews', async (req, res) => {
-  const id = req.params.restaurant_id;
-  const { username,rating, comment } = req.body;
-  // Insert the review into the reviews table
-  const review = {
-    RestaurantID: parseInt(id),
-    CustomerName:username, // Use the correct parameter name
-    Rating: parseInt(rating),
-    Comment: comment,
-  };
-
-  const insertResult = await pool.query('INSERT INTO reviews SET ?', review);
-
-  return res.status(201).json({ message: 'Review added successfully', review: { id: insertResult.insertId, ...review } });
-});
-
-//6.Endpoint for searching restaurants
-
-
 //7. Define the sorting endpoint
-app.get('/api/restaurants/sort', async (req, res) => {
+router.get('/api/restaurants/sort', async (req, res) => {
     try {
       const { sortBy } = req.query;
   
@@ -254,7 +230,7 @@ app.get('/api/restaurants/sort', async (req, res) => {
   });
   
 //2. Endpoint for retrieving a single restaurant by ID
-app.get('/api/restaurants/:restaurant_id', async (req, res) => {
+router.get('/api/restaurants/:restaurant_id', async (req, res) => {
     try {
         const restaurantId = req.params.restaurant_id;
         //console.log(restaurantId);
@@ -285,9 +261,8 @@ app.get('/api/restaurants/:restaurant_id', async (req, res) => {
     }
 });
 
-
 //8.Endpoint for retrieving restaurant details by restaurant ID
-app.get('/api/restaurants/:restaurant_id/details', async (req, res) => {
+router.get('/api/restaurants/:restaurant_id/details', async (req, res) => {
     const restaurantId = req.params.restaurant_id;
 
     try {
@@ -314,7 +289,7 @@ app.get('/api/restaurants/:restaurant_id/details', async (req, res) => {
 
 
 //9. Define an endpoint to retrieve restaurant images by restaurant ID
-app.get('/api/restaurants/:restaurant_id/images', async (req, res) => {
+router.get('/api/restaurants/:restaurant_id/images', async (req, res) => {
     try {
         const restaurantId = req.params.restaurant_id;
 
@@ -336,17 +311,14 @@ app.get('/api/restaurants/:restaurant_id/images', async (req, res) => {
     }
 });
 
-app.post('/api/register', async (req, res) => {
+router.post('/api/register', async (req, res) => {
   try {
     const { username, email,password } = req.body;
     const saltRounds = 10; // Number of salt rounds (adjust as needed)
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     verificationCode = generateVerificationCode();
     const connection = await pool.getConnection();
-    const [maxIdRows] = await pool.query('SELECT MAX(userId) AS maxId FROM users');
-    const maxId = maxIdRows[0].maxId || 0;
-    const newUserId = maxId + 1;
-    const [rows] = await connection.query('INSERT INTO users (userId, username,email, password, otp) VALUES (?, ?, ?, ?, ?)', [newUserId,username,email, hashedPassword,verificationCode]);
+    const [rows] = await connection.query('INSERT INTO users (username,email, password, otp) VALUES (?, ?, ?, ?)', [username,email, hashedPassword,verificationCode]);
     connection.release();
     console.log(verificationCode);
 
@@ -364,7 +336,7 @@ app.post('/api/register', async (req, res) => {
 
 
 // Verify OTP and register user
-app.post('/api/otp-confirmation', async (req, res) => {
+router.post('/api/otp-confirmation', async (req, res) => {
   try {
     const { email,username, otp } = req.body;
 
@@ -393,7 +365,7 @@ app.post('/api/otp-confirmation', async (req, res) => {
 
 
 // User login endpoint
-app.post('/api/login', async (req, res) => {
+router.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -414,7 +386,7 @@ app.post('/api/login', async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (passwordMatch) {
-      return res.status(200).json({  message: 'Login successful.',userId:user.userId, username:user.username});
+      return res.status(200).json({  message: 'Login successful.',username:user.username});
     } else {
       return res.status(401).json({ message: 'Incorrect password.' });
     }
@@ -425,7 +397,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 // Add this route inside your server.js file
-app.post('/api/reset-password', async (req, res) => {
+router.post('/api/reset-password', async (req, res) => {
   const { email, newPassword } = req.body;
 
   // Verify the reset token (You need to implement token verification logic)
@@ -452,6 +424,6 @@ app.post('/api/reset-password', async (req, res) => {
 
 
 
-app.listen(port, () => {
+router.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

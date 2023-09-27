@@ -15,7 +15,7 @@ function ResetPasswordForm({ onResetSuccess }) {
 
   const handleResetPassword = async () => {
     try {
-      const response = await fetch('/reset-password', {
+      const response = await fetch('/api/reset-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ function ResetPasswordForm({ onResetSuccess }) {
         if (onResetSuccess) {
           onResetSuccess();
         }
-        navigate('/login')
+        navigate('/api/login')
       } else {
         throw new Error('Reset password failed');
       }

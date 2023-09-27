@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import './Registration.css'
 function SearchRestaurantList() {
   const [restaurants, setRestaurants] = useState([]);
   const location = useLocation();
@@ -32,8 +33,8 @@ function SearchRestaurantList() {
   
 
   return (
-    <div>
-      <h1>Restaurant List</h1>
+    <div className='search-container'>
+      <h1 className='text-center' >Restaurant List</h1>
       <div className="card-container">
         {restaurants.map((restaurant) => (
           <div key={restaurant.RestaurantId} className="card card-div">

@@ -6,8 +6,6 @@ import RestaurantDetail from './RestaurantDetail'; // Import the RestaurantDetai
 function IndividualRestaurantPage() {
   // Use the useParams hook to get the restaurant ID from the URL
   const { id } = useParams();
-    console.log(id);
-  // State to store the restaurant data
   const [restaurantData, setRestaurantData] = useState(null);
 
   useEffect(() => {

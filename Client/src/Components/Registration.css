@@ -42,7 +42,12 @@
     border-radius: 3px;
     font-size: 16px;
   }
-  
+  .search-container{
+    background-color: #333;
+    color: white;
+    background-size:100vh;
+    height:200vh;
+  }
   .submit-button {
     width: 100%;
     padding: 10px;

@@ -1,13 +1,13 @@
-const mysql = require('mysql');
+const mysql = require('mysql/promise');
 
-const db = mysql.createConnection({
+const pool = mysql.createConnection({
   host: 'localhost',
   user: 'vamshi',
   password: '1234',
   database: 'restaurant',
 });
 
-db.connect((err) => {
+pool.connect((err) => {
   if (err) {
     console.error('Error connecting to MySQL: ', err);
     return;
@@ -15,4 +15,4 @@ db.connect((err) => {
   console.log('Connected to MySQL');
 });
 
-module.exports = db;
+module.exports = pool;
