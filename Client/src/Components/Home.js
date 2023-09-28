@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <div className='main'>
       <div className='d-flex flex-column justify-content-center text-center'>
-        <div className='main-container pt-3'>
+        <div className='about-card main-container pt-3'>
           <h2 className='main-heading'>Restaurants App</h2>
           <p className='content-para'>Discover the best food & drink</p>
           <form className="d-flex" role="search">
