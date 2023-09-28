@@ -47,8 +47,8 @@ function Login(props) {
   };
 
   return (
-    <div className="login-container">
-      <div className='login-board'>
+    <div className="registration-container">
+      <div className='registration-board'>
          <form  className='registration-form' method='POST' onSubmit={handleLogin}>
           <h2>Login</h2>
          <label htmlFor="email">Email:</label>

@@ -24,7 +24,6 @@ function RestaurantDetail({ restaurant }) {
                   <h>{menu.Description}</h>
                   <p>Price : ${menu.Price}</p>
                   </div>
-                  <hr/>
                 </div>
               ))}
             </ul>

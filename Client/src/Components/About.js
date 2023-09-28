@@ -18,8 +18,8 @@ export default function About() {
             <div className='content'>
                 <h2 className='heading'>Why people choose us</h2>
                 <h4 className='heading-2'>It’s simple. We Serve Best Food.</h4>
-                <p className='para'>People really happy with us as we peovide the best for them. Best in Food. Best in saving Time. Best in service, Oh god! There is a list of them. We are looking for you to come and visit us where you can feel every bit of food.</p>
-                <p className='para'>People really happy with us as we peovide the best for them. Best in Food. Best in saving Time. Best in service, Oh god! There is a list of them. We are looking for you to come and visit us where you can feel every bit of food.</p>
+                <p className='para'>People really happy with us as we provide the best for them. Best in Food. Best in saving Time. Best in service, Oh god! There is a list of them. We are looking for you to come and visit us where you can feel every bit of food.</p>
+                <p className='para'>People really happy with us as we provide the best for them. Best in Food. Best in saving Time. Best in service, Oh god! There is a list of them. We are looking for you to come and visit us where you can feel every bit of food.</p>
             </div>
         </div>
         <div className='images-container mb-4'>

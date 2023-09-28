@@ -12,6 +12,7 @@ import OTPConfirmation from './Components/OTPConfirmation';
 import { AuthProvider } from './Components/AuthContext';
 import SearchRestaurantList from './Components/Search';
 import ReviewForm from './Components/ReviewForm';
+import EditForm from './Components/EditForm';
 //import { useAuth } from './Components/AuthContext';
 
 
@@ -42,6 +43,7 @@ export default function Routers() {
         <Route path="/api/register" element={<RegistrationForm/>}/>
         <Route path="/api/reset-password" element={<ResetPasswordForm/>}/>
         <Route path="/api/otp-confirmation" element={<OTPConfirmation/>}/>
+        <Route path="/api/edit" element={<EditForm/>}/>
         <Route path="/api/restaurants/:restaurant_id/reviews" element={<ReviewForm username={username}/>}/>
         <Route path="/api/restaurants/search" element={<SearchRestaurantList/>}/>
         <Route path="/api/restaurants/:id/details" element={<IndividualRestaurantPage/>} />

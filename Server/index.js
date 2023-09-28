@@ -153,6 +153,31 @@ app.get('/api/restaurants/filter', async (req, res) => {
       res.status(500).json({ error: 'Database error' });
     }
   });
+// Delete a restaurant and related data
+app.delete('/api/edit', async (req, res) => {
+  const data = req.body;
+  const restaurantID=data.deleteRestaurant_id
+  const connection = await pool.getConnection();
+
+  try {
+    await connection.beginTransaction();
+    await connection.query('DELETE FROM restaurants WHERE restaurantID = ?', [restaurantID]);
+    await connection.query('DELETE FROM reviews WHERE restaurantID = ?', [restaurantID]);
+    await connection.query('DELETE FROM menuitems WHERE restaurantID = ?', [restaurantID]);
+    await connection.query('DELETE FROM categories WHERE restaurantID = ?', [restaurantID]);
+    await connection.commit();
+
+    res.status(200).json({ message: 'Restaurant and related data deleted successfully' });
+  } catch (error) {
+    await connection.rollback();
+    console.error('Error deleting data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  } finally {
+    connection.release();
+  }
+});
+
+
 
 //4.Endpoint for retrieving the menu of a specific restaurant
 app.get('/api/restaurants/:restaurant_id/menu', async (req, res) => {

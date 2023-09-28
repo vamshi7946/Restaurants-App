@@ -1,8 +1,7 @@
 // RestaurantCard.js
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
+import './Registration.css';
 function RestaurantCard() {
     const [restaurants, setRestaurants] = useState([]);
     useEffect(() => {
@@ -21,7 +20,7 @@ function RestaurantCard() {
                 <div className="card-body">
                   <h5 className="card-title">{restaurant.Name}</h5>
                   <p className="card-text">{restaurant.Location}</p>
-                  <Link to={`/api/restaurants/${restaurant.RestaurantID}/details`} className="btn btn-primary">Go somewhere</Link>
+                  <Link to={`/api/restaurants/${restaurant.RestaurantID}/details`} className="btn btn-primary">Enter Restaurant</Link>
                 </div>
           </div>
         ))}
