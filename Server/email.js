@@ -4,8 +4,8 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
     service: 'gmail', // e.g., 'Gmail', 'Yahoo', 'Outlook', etc.
     auth: {
-      user: 'somavamshi4813@gmail.com', // Your email address
-      pass: 'coko czih dvvq wqhm', // Your email password
+      user: 'xxx@gmail.com', // Your email address
+      pass: 'xxxx xxxx xxxx xxxx', // Your email password
     },
   });
 
@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
   // Function to send a welcome email
   function sendWelcomeEmail(email,username) {
     const mailOptions = {
-      from: 'somavamshi4813@gmail.com', // Sender email address
+      from: 'xxx@.com', // Sender email address
       to: email,// Recipient email address
       subject: 'Welcome to Restaurant Nodejs Project - Registration Successful!',
       text: `Dear ${username},
